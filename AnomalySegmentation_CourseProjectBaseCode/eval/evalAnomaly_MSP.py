@@ -92,14 +92,14 @@ def main():
     model = load_my_state_dict(model, torch.load(weightspath, map_location=lambda storage, loc: storage))
     print ("Model and weights LOADED successfully")
     model.eval()
-
+    temperature = input("choose a value for temperature scaling: ")
     for path in glob.glob(os.path.expanduser(str(args.input[0]))):
         print(path)
         images = torch.from_numpy(np.array(Image.open(path).convert('RGB'))).unsqueeze(0).float()
         images = images.permute(0,3,1,2)
         with torch.no_grad():
             result = model(images)
-        probs_softmax = torch.nn.functional.softmax(result.squeeze(0), dim=0)
+        probs_softmax = torch.nn.functional.softmax(result.squeeze(0)/temperature, dim=0)
         anomaly_result = 1.0-(np.max(probs_softmax.data.cpu().numpy(), axis=0))
         pathGT = path.replace("images", "labels_masks")
         if "RoadObsticle21" in pathGT:
