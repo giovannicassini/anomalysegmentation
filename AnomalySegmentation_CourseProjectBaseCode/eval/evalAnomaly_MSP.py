@@ -93,7 +93,10 @@ def main():
     print ("Model and weights LOADED successfully")
     model.eval()
     t = input("choose a value for temperature scaling: ")
-    temperature=float(t)
+    if t == "":
+        t=1
+    else:
+        temperature=float(t)
     for path in glob.glob(os.path.expanduser(str(args.input[0]))):
         print(path)
         images = torch.from_numpy(np.array(Image.open(path).convert('RGB'))).unsqueeze(0).float()
