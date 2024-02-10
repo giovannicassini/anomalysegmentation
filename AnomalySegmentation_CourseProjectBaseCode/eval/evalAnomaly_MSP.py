@@ -92,9 +92,10 @@ def main():
     model = load_my_state_dict(model, torch.load(weightspath, map_location=lambda storage, loc: storage))
     print ("Model and weights LOADED successfully")
     model.eval()
-    t = input("choose a value for temperature scaling: ")
+    t = input("choose a value for temperature scaling (press Enter if you want the default value 1): ")
     if t == "":
         t=1
+        temperature=float(t)
     else:
         temperature=float(t)
     for path in glob.glob(os.path.expanduser(str(args.input[0]))):
